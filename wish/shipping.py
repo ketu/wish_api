@@ -3,9 +3,10 @@
 
 from .resource import Resource
 
+__all__ = ["Shipping"]
+
 
 class Shipping(Resource):
-
     def get_confirmed_delivery_countries(self):
         """
         Get Countries that Require Confirmed Delivery

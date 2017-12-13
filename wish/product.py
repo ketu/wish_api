@@ -3,9 +3,10 @@
 
 from .resource import Resource
 
+__all__ = ["Product"]
+
 
 class Product(Resource):
-
     def create(self, product_data):
         """
         Create a Product
@@ -158,7 +159,6 @@ class Product(Resource):
         :return:
         """
         return self.client.execute("product/update-multi-shipping", "POST", kwargs)
-
 
     def get_shipping_prices(self, **kwargs):
         """

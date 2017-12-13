@@ -4,8 +4,10 @@ import random
 from urllib import parse as urlparse
 import requests
 import string
-import json
 from .settings import BASE_URL, BASE_SANDBOX_URL, BASE_ENDPOINT
+from .utils import build_response
+
+__all__ = ["Oauth"]
 
 
 class Oauth(object):
@@ -44,13 +46,7 @@ class Oauth(object):
         url = urlparse.urlunparse((u.scheme, u.netloc, u.path, u.params, query, u.fragment))
         return url, state
 
-    def prepare_response_body(self, r):
-        b = json.loads(r.text)
 
-        if r.status_code == 200 and b["code"] == 0:
-            return b["data"]
-
-        raise AttributeError(b['message'])
 
     def get_access_token(self, authorization_code):
         params = {
@@ -61,7 +57,7 @@ class Oauth(object):
             'redirect_uri': self.redirect_uri
         }
         r = requests.post(self.base_access_token_url, data=params)
-        return self.prepare_response_body(r)
+        return build_response(r)
 
     def get_access_token_by_refresh_token(self, refresh_token):
         params = {
@@ -71,4 +67,4 @@ class Oauth(object):
             'grant_type': 'refresh_token'
         }
         r = requests.post(self.base_refresh_token_url, data=params)
-        return self.prepare_response_body(r)
+        return build_response(r)

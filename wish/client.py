@@ -4,12 +4,18 @@
 import json
 from urllib.parse import urljoin
 from requests import Request, Session
-from .order import Order
 from .settings import BASE_URL, BASE_ENDPOINT, BASE_SANDBOX_URL
+from .utils import build_response
+from .order import Order
+from .product import Product
+from .shipping import Shipping
+from .variation import Variation
 
 installed_module = {
-    "order": Order
-    # "product": Product
+    "order": Order,
+    "product": Product,
+    'variation': Variation,
+    'shipping': Shipping,
 }
 
 
@@ -67,10 +73,7 @@ class Client(object, metaclass=ClientMeta):
         prepped = req.prepare()
         s = Session()
         resp = s.send(prepped)
-        resp = self.build_response(resp)
-        return resp
-
-    def build_response(self, resp):
+        resp = build_response(resp)
         return resp
 
     def get_cached_module(self, key):
