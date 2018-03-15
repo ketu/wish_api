@@ -77,11 +77,12 @@ class Client(object, metaclass=ClientMeta):
         return resp
 
     def get_cached_module(self, key):
-        cached_module = self.cached_module.get(key)
+        cache_key = self.access_token + key
+        cached_module = self.cached_module.get(cache_key)
         if not cached_module:
             installed = self.installed_module.get(key)
             if not installed:
                 return None
             cached_module = installed(self)
-            self.cached_module.setdefault(key, cached_module)
+            self.cached_module.setdefault(cache_key, cached_module)
         return cached_module
